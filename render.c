@@ -75,20 +75,6 @@ struct Point {
 };
 
 void make_regular_polygon(struct wl_list* coords, size_t vertices, int radius, int center_x, int center_y) {
-	/*
-	struct Point *p1 = (struct Point*) malloc(sizeof(struct Point));
-	struct Point *p2 = (struct Point*) malloc(sizeof(struct Point));
-	struct Point *p3 = (struct Point*) malloc(sizeof(struct Point));
-
-	p1->x = 1;
-	p2->x = 2;
-	p3->x = 3;
-
-	wl_list_insert(coords, &p1->link);
-	wl_list_insert(coords, &p2->link);
-	wl_list_insert(coords, &p3->link);
-	*/
-
   // vertices + 1 to close the shape
   for (size_t i = 0; i < vertices + 1; i++) {
     int x = round(radius * sin((i+1) * 2 * M_PI / vertices));
@@ -104,7 +90,6 @@ void make_regular_polygon(struct wl_list* coords, size_t vertices, int radius, i
 void draw_point_list(cairo_t* cairo, struct wl_list* coords) {
 	struct Point *p;
 	wl_list_for_each(p, coords, link) {
-		printf("%d\n", p->x);
 		cairo_line_to(cairo, p->x, p->y);
 	}
 	cairo_stroke(cairo);
