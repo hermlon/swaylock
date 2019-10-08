@@ -87,6 +87,40 @@ void make_regular_polygon(struct wl_list* coords, size_t vertices, int radius, i
   }
 }
 
+void add_new_iteration(struct wl_list* coords, int pos) {
+	int i = 0;
+	struct Point *p;
+	struct Point *last = NULL;
+	wl_list_for_each(p, coords, link) {
+		if(i == pos && last != NULL) {
+
+			int vect_third_x = (p->x - last->x)/3;
+			int vect_third_y = (p->y - last->y)/3;
+
+			struct Point *first_new = (struct Point*) malloc(sizeof(struct Point));
+			first_new->x = last->x + vect_third_x;
+			first_new->y = last->y + vect_third_y;
+			wl_list_insert(&last->link, &first_new->link);
+
+			struct Point *second_new = (struct Point*) malloc(sizeof(struct Point));
+			int vect_half_x = (p->x - last->x)/2;
+			int vect_half_y = (p->y - last->y)/2;
+			int vect_norm_x = -vect_third_y * sqrt(3.0/4.0);
+			int vect_norm_y = vect_third_x * sqrt(3.0/4.0);
+			second_new->x = last->x + vect_half_x + vect_norm_x;
+			second_new->y = last->y + vect_half_y + vect_norm_y;
+			wl_list_insert(&first_new->link, &second_new->link);
+
+			struct Point *third_new = (struct Point*) malloc(sizeof(struct Point));
+			third_new->x = p->x - vect_third_x;
+			third_new->y = p->y - vect_third_y;
+			wl_list_insert(&second_new->link, &third_new->link);
+		}
+		last = p;
+		i++;
+	}
+}
+
 void draw_point_list(cairo_t* cairo, struct wl_list* coords) {
 	struct Point *p;
 	wl_list_for_each(p, coords, link) {
@@ -151,6 +185,11 @@ void render_frame(struct swaylock_surface *surface) {
 			wl_list_init(&fractal_list);
 
 			make_regular_polygon(&fractal_list, 3, arc_radius, buffer_width / 2, buffer_diameter / 2);
+
+			add_new_iteration(&fractal_list, 2);
+			add_new_iteration(&fractal_list, 5);
+			add_new_iteration(&fractal_list, 3);
+			add_new_iteration(&fractal_list, 3);
 
 			draw_point_list(cairo, &fractal_list);
 
