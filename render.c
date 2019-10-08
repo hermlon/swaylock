@@ -160,31 +160,19 @@ void render_frame(struct swaylock_surface *surface) {
 
 	if (state->args.show_fractal) {
 		if (state->args.show_indicator && (state->auth_state != AUTH_STATE_IDLE ||
-				state->args.indicator_idle_visible)) {
+			state->args.indicator_idle_visible)) {
 
-				struct wl_list fractal_list;
-				wl_list_init(&fractal_list);
+			struct wl_list fractal_list;
+			wl_list_init(&fractal_list);
 
-				make_regular_polygon(&fractal_list, 3, arc_radius, buffer_width / 2, buffer_diameter / 2);
+			make_regular_polygon(&fractal_list, 3, arc_radius, buffer_width / 2, buffer_diameter / 2);
 
-				draw_point_list(cairo, &fractal_list);
+			draw_point_list(cairo, &fractal_list);
 
-				struct Point *p;
-				wl_list_for_each(p, &fractal_list, link) {
-					free(p);
-				}
-				/*
-				struct Point *last = NULL;
-
-				wl_list_for_each(pos, &fractal_list, link) {
-					cairo_move_to(cairo, pos->x, pos->y);
-					if(last != NULL) {
-						cairo_move_to(cairo, last->x, last->y);
-						cairo_line_to(cairo, p->x, p->y);
-						cairo_stroke(cairo);
-					}
-					last = pos;
-				}*/
+			struct Point *p;
+			wl_list_for_each(p, &fractal_list, link) {
+				free(p);
+			}
 			/*
 			// Draw circle
 
