@@ -535,6 +535,7 @@ static int parse_options(int argc, char **argv, struct swaylock_state *state,
 		LO_TEXT_CAPS_LOCK_COLOR,
 		LO_TEXT_VER_COLOR,
 		LO_TEXT_WRONG_COLOR,
+		LO_SHOW_FRACTAL,
 	};
 
 	static struct option long_options[] = {
@@ -587,6 +588,7 @@ static int parse_options(int argc, char **argv, struct swaylock_state *state,
 		{"separator-color", required_argument, NULL, LO_SEP_COLOR},
 		{"text-color", required_argument, NULL, LO_TEXT_COLOR},
 		{"text-clear-color", required_argument, NULL, LO_TEXT_CLEAR_COLOR},
+		{"fractal", no_argument, NULL, LO_SHOW_FRACTAL},
 		{"text-caps-lock-color", required_argument, NULL, LO_TEXT_CAPS_LOCK_COLOR},
 		{"text-ver-color", required_argument, NULL, LO_TEXT_VER_COLOR},
 		{"text-wrong-color", required_argument, NULL, LO_TEXT_WRONG_COLOR},
@@ -833,6 +835,11 @@ static int parse_options(int argc, char **argv, struct swaylock_state *state,
 		case LO_IND_IDLE_VISIBLE:
 			if (state) {
 				state->args.indicator_idle_visible = true;
+			}
+			break;
+		case LO_SHOW_FRACTAL:
+			if (state) {
+				state->args.show_fractal = true;
 			}
 			break;
 		case LO_IND_RADIUS:
@@ -1090,6 +1097,7 @@ int main(int argc, char **argv) {
 		.thickness = 10,
 		.ignore_empty = false,
 		.show_indicator = true,
+		.show_fractal = false,
 		.show_caps_lock_indicator = false,
 		.show_caps_lock_text = true,
 		.show_keyboard_layout = false,
