@@ -74,19 +74,21 @@ struct Point {
 	struct wl_list link;
 };
 
-struct wl_list make_regular_polygon(size_t vertices, int radius, int center_x, int center_y) {
-	struct wl_list coords;
+void make_regular_polygon(struct wl_list* coords, size_t vertices, int radius, int center_x, int center_y) {
+	//struct wl_list coords;
 
-	struct Point p1, p2, p3;
+	struct Point *p1 = (struct Point*) malloc(sizeof(struct Point));
+	struct Point *p2 = (struct Point*) malloc(sizeof(struct Point));
+	struct Point *p3 = (struct Point*) malloc(sizeof(struct Point));
 
-	p1.x = 1;
-	p2.x = 2;
-	p3.x = 3;
+	p1->x = 1;
+	p2->x = 2;
+	p3->x = 3;
 
-	wl_list_init(&coords);
-	wl_list_insert(&coords, &p1.link);
-	wl_list_insert(&coords, &p2.link);
-	wl_list_insert(&coords, &p3.link);
+	//wl_list_init(&coords);
+	wl_list_insert(coords, &p1->link);
+	wl_list_insert(coords, &p2->link);
+	wl_list_insert(coords, &p3->link);
 
 	/*
 	wl_list_init(&coords);
@@ -100,7 +102,7 @@ struct wl_list make_regular_polygon(size_t vertices, int radius, int center_x, i
 
 		wl_list_insert(&coords, &point.link);
   }*/
-	return coords;
+	//return coords;
 }
 
 void render_frame(struct swaylock_surface *surface) {
@@ -155,12 +157,32 @@ void render_frame(struct swaylock_surface *surface) {
 		if (state->args.show_indicator && (state->auth_state != AUTH_STATE_IDLE ||
 				state->args.indicator_idle_visible)) {
 
-				struct wl_list fractal_list =
-					make_regular_polygon(3, arc_radius, buffer_width / 2, buffer_diameter / 2);
+				struct wl_list fractal_list;
+				wl_list_init(&fractal_list);
+
+				/*
+				struct Point p1, p2, p3;
+
+				p1.x = 1;
+				p2.x = 2;
+				p3.x = 3;
+
+				//wl_list_init(&coords);
+				wl_list_insert(&fractal_list, &p1.link);
+				wl_list_insert(&fractal_list, &p2.link);
+				wl_list_insert(&fractal_list, &p3.link);
+				*/
+
+				make_regular_polygon(&fractal_list, 3, arc_radius, buffer_width / 2, buffer_diameter / 2);
 
 				struct Point *p;
 				wl_list_for_each(p, &fractal_list, link) {
 					printf("%d\n", p->x);
+				}
+
+
+				wl_list_for_each(p, &fractal_list, link) {
+					free(p);
 				}
 				/*
 
