@@ -75,8 +75,7 @@ struct Point {
 };
 
 void make_regular_polygon(struct wl_list* coords, size_t vertices, int radius, int center_x, int center_y) {
-	//struct wl_list coords;
-
+	/*
 	struct Point *p1 = (struct Point*) malloc(sizeof(struct Point));
 	struct Point *p2 = (struct Point*) malloc(sizeof(struct Point));
 	struct Point *p3 = (struct Point*) malloc(sizeof(struct Point));
@@ -85,24 +84,30 @@ void make_regular_polygon(struct wl_list* coords, size_t vertices, int radius, i
 	p2->x = 2;
 	p3->x = 3;
 
-	//wl_list_init(&coords);
 	wl_list_insert(coords, &p1->link);
 	wl_list_insert(coords, &p2->link);
 	wl_list_insert(coords, &p3->link);
+	*/
 
-	/*
-	wl_list_init(&coords);
   // vertices + 1 to close the shape
   for (size_t i = 0; i < vertices + 1; i++) {
     int x = round(radius * sin((i+1) * 2 * M_PI / vertices));
     int y = round(radius * cos((i+1) * 2 * M_PI / vertices));
-		struct Point point;
-		point.x = center_x + x;
-		point.y = center_y - y;
+		struct Point *point = (struct Point*) malloc(sizeof(struct Point));
+		point->x = center_x + x;
+		point->y = center_y - y;
 
-		wl_list_insert(&coords, &point.link);
-  }*/
-	//return coords;
+		wl_list_insert(coords, &point->link);
+  }
+}
+
+void draw_point_list(cairo_t* cairo, struct wl_list* coords) {
+	struct Point *p;
+	wl_list_for_each(p, coords, link) {
+		printf("%d\n", p->x);
+		cairo_line_to(cairo, p->x, p->y);
+	}
+	cairo_stroke(cairo);
 }
 
 void render_frame(struct swaylock_surface *surface) {
@@ -160,48 +165,14 @@ void render_frame(struct swaylock_surface *surface) {
 				struct wl_list fractal_list;
 				wl_list_init(&fractal_list);
 
-				/*
-				struct Point p1, p2, p3;
-
-				p1.x = 1;
-				p2.x = 2;
-				p3.x = 3;
-
-				//wl_list_init(&coords);
-				wl_list_insert(&fractal_list, &p1.link);
-				wl_list_insert(&fractal_list, &p2.link);
-				wl_list_insert(&fractal_list, &p3.link);
-				*/
-
 				make_regular_polygon(&fractal_list, 3, arc_radius, buffer_width / 2, buffer_diameter / 2);
+
+				draw_point_list(cairo, &fractal_list);
 
 				struct Point *p;
 				wl_list_for_each(p, &fractal_list, link) {
-					printf("%d\n", p->x);
-				}
-
-
-				wl_list_for_each(p, &fractal_list, link) {
 					free(p);
 				}
-				/*
-
-
-
-
-				struct Point p1, p2, p3;
-
-				wl_list_init(&fractal_list);
-				wl_list_insert(&fractal_list, &p1.link);   // e1 is the first element
-				wl_list_insert(&fractal_list, &p2.link);
-				wl_list_insert(&fractal_list, &p3.link);*/
-
-				//struct Point *pos;
-
-				/*
-				for (pos = wl_container_of((&fractal_list)->next, pos, link); &pos->link != (&fractal_list);) {
-
-				}*/
 				/*
 				struct Point *last = NULL;
 
